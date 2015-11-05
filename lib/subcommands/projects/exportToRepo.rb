@@ -30,14 +30,20 @@ class ExportToRepo < Subcommand
       puts "Decompressing #{project}"
       destination_directory = File.join(@@project_definitions_directory, project)
       rm_rf(destination_directory)
+
       MyZip.new.unzip(project_file, destination_directory, "(\/reports\/|\/executions\/)")
       rundeck.clean_project(destination_directory)
 
     end
     
     git.add
-    git.commit
-    git.push
+
+    if git.something_to_commit?
+      git.commit
+      git.push
+    else
+      puts "Nothing to commit"
+    end
 
   end
 

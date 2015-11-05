@@ -15,26 +15,28 @@ class Git
   end
 
   def git_binary?
-    result = run("git --version", File.expand_path(Dir.pwd))
+    result, output = run("git --version", File.expand_path(Dir.pwd))
     return result
   end
 
   def run(command, working_directory=local_repository)
 
     puts "Running #{command}"
+    output = []
     Open3.popen2e(command, :chdir=>"#{working_directory }") do |stdin, stdout_err, wait_thr|
       while line = stdout_err.gets
-        puts line
+        output << line
       end
+      output.each {|line| puts line}
       raise "Error while running #{command}" if not wait_thr.value.success?
-      return wait_thr.value.success?
+      return wait_thr.value.success?, output
     end
   end
 
   def git_init
     unless is_repo?(local_repository)
       FileUtils::mkdir_p local_repository
-      result = run("git init #{local_repository}")
+      result, output = run("git init #{local_repository}")
 
       if result && !remote_bare_repository.nil?
         git_remote_add
@@ -53,57 +55,73 @@ class Git
     Dir.exists?(File.join(directory, '.git'))
   end
 
-  def git_config_username
-    run("git config user.name 'perundeck'")
+  def git_something_to_commit?
+    result, output = run("git status -z --porcelain")
+    if output.empty? then return false else return true end
   end
 
+  alias_method :something_to_commit?, :git_something_to_commit?
+
+  def git_config_username
+    result, output = run("git config user.name 'perundeck'")
+    return result
+  end
+
+  alias_method :config_username, :git_config_username
+
   def git_config_email
-    run("git config user.email prodeng@ask.com")
+    result, output = run("git config user.email prodeng@ask.com")
+    return result
   end
 
   alias_method :config_email, :git_config_email
 
   def git_remote_add
-    run("git remote add origin #{remote_bare_repository}")
+    result, output = run("git remote add origin #{remote_bare_repository}")
+    return result
   end
 
   alias_method :remote_add, :git_remote_add
 
   def git_remote_rm_origin
-    run("git remote rm origin")
+    result, output = run("git remote rm origin")
+    return result
   end
 
   alias_method :remote_rm_origin, :git_remote_rm_origin
 
   def git_add
-    run("git add --all")
+    result, output = run("git add --all")
+    return result
   end
 
   alias_method :add, :git_add
 
   def git_commit(comment="Regular basis commit by Rundeck server")
-    run("git commit -m \"#{comment} at #{Time.now.utc}\"")
+    result, output = run("git commit -m \"#{comment} at #{Time.now.utc}\"")
+    return result
   end
 
   alias_method :commit, :git_commit
 
   def git_push
-    run("git push origin master --force")
+    result, output = run("git push origin master --force")
+    return result
   end
 
   alias_method :push, :git_push
 
   def git_pull
-    result = run("git fetch --all")
+    result, output = run("git fetch --all")
     git_reset_hard if result
-
-    result
+    return result
   end
 
   alias_method :pull, :git_pull
 
   def git_reset_hard
-    run("git reset --hard origin/master")
+    result, output = run("git reset --hard origin/master")
+    return result
   end
 
   alias_method :reset_hard, :git_reset_hard

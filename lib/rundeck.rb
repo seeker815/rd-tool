@@ -48,7 +48,26 @@ class Rundeck
   end
 
   def clean_project(directory)
-    puts directory
+
+    project_name = File.basename(directory)
+
+    what_to_clean = [
+      {:file => 'META-INF/MANIFEST.MF', :pattern_to_clean => '^Rundeck-Archive-Export-Date'},
+      {:file => "rundeck-#{project_name}/files/etc/project.properties", :pattern_to_clean => '^#'}
+    ] 
+    
+    what_to_clean.each do |i|
+      file = File.join(directory, i[:file])
+      pattern = i[:pattern_to_clean]
+
+      old_file = File.readlines(file)
+      File.open(file, 'w') do |new_file|
+        old_file.each do |line|
+          new_file.write(line) if not line =~ /#{pattern}/
+        end
+      end   
+    end
+
   end
 
 end
