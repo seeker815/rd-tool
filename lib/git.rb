@@ -2,6 +2,7 @@ require 'open3'
 
 class Git
 
+  #TODO: Read email and username from config file
   attr_reader :local_repository, :remote_bare_repository
 
   def initialize(remote_bare_repository=nil, local_repository='/tmp/rd-tool/project-definitions')
@@ -70,7 +71,7 @@ class Git
   alias_method :config_username, :git_config_username
 
   def git_config_email
-    result, output = run("git config user.email prodeng@ask.com")
+    result, output = run("git config user.email prodeng@xxx.com")
     return result
   end
 
