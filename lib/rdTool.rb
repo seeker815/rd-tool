@@ -115,6 +115,7 @@ class Rdtool
   def print_usage
     puts ""
     puts "#{script_name} requires at least Rundeck 2.6.0"
+    puts "Be aware that import actions are destructive meaning that it will remove all the projects before import"
     puts ""
     puts "Usage: #{script_name} SUBCOMMAND SUBCOMMAND TARGET"
     puts ""
