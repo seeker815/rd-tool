@@ -15,7 +15,7 @@ class Rdtool
 
     @args = args
     @subcommand_dir = 'subcommands'
-    @script_name = script_name
+    @script_name = File.basename(script_name)
 
     require_libs
     require_subcommands
@@ -113,6 +113,8 @@ class Rdtool
   end
 
   def print_usage
+    puts ""
+    puts "#{script_name} requires at least Rundeck 2.6.0"
     puts ""
     puts "Usage: #{script_name} SUBCOMMAND SUBCOMMAND TARGET"
     puts ""

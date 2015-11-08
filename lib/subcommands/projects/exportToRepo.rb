@@ -1,40 +1,32 @@
 class ExportToRepo < Subcommand
 
   attr_reader :remote_repository, :subcommand_action, :subcommand_full, :description, :cmd_example
+
   def initialize(target=nil)
 
     @remote_repository = target
     @subcommand_action = "exportToRepo"
     @subcommand_full = "projects #{subcommand_action}"
-    @cmd_example = "#{subcommand_full} 'https://github.com/snebel29/foo-repo'"
+    @cmd_example = "#{subcommand_full} 'git@git.foo.com:devops-rundeck/foo-repo.git'"
     @description = "Export Rundeck projects to repository, requires a valid non empty repository url as parameter, an empty README.md file would be enough"
 
   end
 
   def run
+
     puts "Running #{subcommand_full} #{remote_repository}"
 
     git = Git.new(remote_repository, @@project_definitions_directory)
     rundeck = Rundeck.new
 
     git.init
-    git.pull
 
-    rundeck.projects.each do |project|
+    #The hard_pull then remove everything except .git is necessary to catch deletes, .git folder is not removed using Dir
+    git.hard_pull 
+    Dir[File.join(@@project_definitions_directory, '/*')].each { |file| Subcommand.rm_rf(file) }
 
-      project_file = File.join(@@tmp_directory, Date.today.strftime("%Y-%m-%d") + '_' + project + '.zip')
-
-      puts "Exporting #{project} to #{project_file}"
-      rundeck.project_to_file(project, project_file)
-
-      puts "Decompressing #{project}"
-      destination_directory = File.join(@@project_definitions_directory, project)
-      rm_rf(destination_directory)
-
-      MyZip.new.unzip(project_file, destination_directory, "(\/reports\/|\/executions\/)")
-      rundeck.clean_project(destination_directory)
-
-    end
+    rundeck.projects_to_zip(@@tmp_directory)
+    rundeck.projects_unzip_to_repo(@@tmp_directory, @@project_definitions_directory, "(\/reports\/|\/executions\/)")
     
     git.add
 
@@ -44,6 +36,8 @@ class ExportToRepo < Subcommand
     else
       puts "Nothing to commit"
     end
+
+    puts "Finish"
 
   end
 

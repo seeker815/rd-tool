@@ -3,6 +3,7 @@ require 'open3'
 class Git
 
   #TODO: Read email and username from config file
+  #TODO: Check git version as a dependency
   attr_reader :local_repository, :remote_bare_repository
 
   def initialize(remote_bare_repository=nil, local_repository='/tmp/rd-tool/project-definitions')
@@ -34,15 +35,15 @@ class Git
     end
   end
 
-  def git_init
+  def git_init(username='unknown', email='unknown@unknown.unknown')
     unless is_repo?(local_repository)
       FileUtils::mkdir_p local_repository
       result, output = run("git init #{local_repository}")
 
       if result && !remote_bare_repository.nil?
         git_remote_add
-        git_config_username
-        git_config_email
+        git_config_username(username)
+        git_config_email(email)
       end
 
         return result
@@ -56,6 +57,14 @@ class Git
     Dir.exists?(File.join(directory, '.git'))
   end
 
+  def git_clone
+    FileUtils::mkdir_p local_repository if not Dir.exists?(local_repository)
+    result, output = run("git clone #{remote_bare_repository} #{local_repository}")
+    return result
+  end
+
+  alias_method :clone, :git_clone
+
   def git_something_to_commit?
     result, output = run("git status -z --porcelain")
     if output.empty? then return false else return true end
@@ -63,15 +72,15 @@ class Git
 
   alias_method :something_to_commit?, :git_something_to_commit?
 
-  def git_config_username
-    result, output = run("git config user.name 'perundeck'")
+  def git_config_username(username)
+    result, output = run("git config user.name '#{username}'")
     return result
   end
 
   alias_method :config_username, :git_config_username
 
-  def git_config_email
-    result, output = run("git config user.email prodeng@xxx.com")
+  def git_config_email(email)
+    result, output = run("git config user.email '#{email}'")
     return result
   end
 
@@ -112,13 +121,13 @@ class Git
 
   alias_method :push, :git_push
 
-  def git_pull
+  def git_hard_pull
     result, output = run("git fetch --all")
     git_reset_hard if result
     return result
   end
 
-  alias_method :pull, :git_pull
+  alias_method :hard_pull, :git_hard_pull
 
   def git_reset_hard
     result, output = run("git reset --hard origin/master")
