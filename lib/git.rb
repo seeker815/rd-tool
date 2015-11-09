@@ -35,7 +35,7 @@ class Git
     end
   end
 
-  def git_init(username=YAML.load_file(File.join(File.dirname(File.dirname(__FILE__)), 'config.yaml'))['username'], email=YAML.load_file(File.join(File.dirname(File.dirname(__FILE__)), 'config.yaml'))['email'])
+  def git_init(username=YAML.load_file(File.join(File.dirname(File.dirname(__FILE__)), 'config.yaml'))['git_username'], email=YAML.load_file(File.join(File.dirname(File.dirname(__FILE__)), 'config.yaml'))['git_email'])
     unless is_repo?(local_repository)
       FileUtils::mkdir_p local_repository
       result, output = run("git init #{local_repository}")
