@@ -1,16 +1,16 @@
 require 'socket'
 require 'rest-client'
 require 'json'
-
+require 'yaml'
 
 class Rundeck
 
   attr_reader :token, :instance, :url
 
-  def initialize(instance=Socket.gethostname, token='GulhKBMPTLKXR7Aonb9ZSmviVSEuR5nJ')
+  def initialize(instance=Socket.gethostname, token=nil)
 
-    #TODO: Read token from file
     #TODO: Factory for REST Client
+    #TODO: Read token from file
     @token = token
     @instance = instance
     @url = "http://#{instance}"
