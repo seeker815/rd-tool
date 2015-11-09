@@ -1,14 +1,14 @@
-class ExportToFile < Subcommand
+class BackupToFile < Subcommand
 
   attr_reader :export_file, :subcommand_action, :subcommand_full, :description, :cmd_example, :tmp_directory
 
   def initialize(target=nil)
 
     @export_file = target
-    @subcommand_action = "exportToFile"
+    @subcommand_action = "backupToFile"
     @subcommand_full = "projects #{subcommand_action}"
     @cmd_example = "#{subcommand_full} foo.zip"
-    @description = "Export Rundeck projects to file, requires a valid filename"
+    @description = "Backup Rundeck projects to a zip file"
 
   end
 

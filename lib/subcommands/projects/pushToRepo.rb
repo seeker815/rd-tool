@@ -1,14 +1,14 @@
-class ExportToRepo < Subcommand
+class PushToRepo < Subcommand
 
   attr_reader :remote_repository, :subcommand_action, :subcommand_full, :description, :cmd_example
 
   def initialize(target=nil)
 
     @remote_repository = target
-    @subcommand_action = "exportToRepo"
+    @subcommand_action = "pushToRepo"
     @subcommand_full = "projects #{subcommand_action}"
     @cmd_example = "#{subcommand_full} 'git@git.foo.com:devops-rundeck/foo-repo.git'"
-    @description = "Export Rundeck projects to repository, requires a valid non empty repository url as parameter, an empty README.md file would be enough"
+    @description = "Push Rundeck projects to git repository, requires a valid non empty repository url as parameter, an empty README.md file would be enough"
 
   end
 

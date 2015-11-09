@@ -1,13 +1,14 @@
-class ImportFromFile < Subcommand
+class RestoreFromFile < Subcommand
 
   attr_reader :import_file, :subcommand_action, :subcommand_full, :description, :cmd_example
+
   def initialize(target=nil)
 
     @import_file = target
-    @subcommand_action = "importFromFile"
+    @subcommand_action = "restoreFromFile"
     @subcommand_full = "projects #{subcommand_action}"
     @cmd_example = "#{subcommand_full} foo.zip"
-    @description = "Import Rundeck projects from a zip file"
+    @description = "Restore Rundeck projects from a previously generated backupToFile zip file, this action remove all existent project"
 
   end
 

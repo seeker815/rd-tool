@@ -1,14 +1,14 @@
-class ImportFromRepo < Subcommand
+class RestoreFromRepo < Subcommand
 
   attr_reader :remote_repository, :subcommand_action, :subcommand_full, :description, :cmd_example
 
   def initialize(target=nil)
 
     @remote_repository = target
-    @subcommand_action = "importFromRepo"
+    @subcommand_action = "restoreFromRepo"
     @subcommand_full = "projects #{subcommand_action}"
     @cmd_example = "#{subcommand_full} 'https://github.com/snebel29/foo-repo'"
-    @description = "Import Rundeck projects from repository, requires a valid repository url as parameter"
+    @description = "Restore Rundeck projects from repository, this action remove all existent projects on the local instance"
 
   end
 
