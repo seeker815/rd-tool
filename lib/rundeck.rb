@@ -7,7 +7,7 @@ class Rundeck
 
   attr_reader :token, :instance, :url
 
-  def initialize(instance=Socket.gethostname, token=nil)
+  def initialize(instance=Socket.gethostname, token=YAML.load_file(File.join(File.dirname(File.dirname(__FILE__)), 'token.yaml'))['token'])
 
     #TODO: Factory for REST Client
     #TODO: Read token from file
