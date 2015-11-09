@@ -3,7 +3,7 @@ Rundeck tool
 
 ```
 Usage: rd-tool SUBCOMMAND SUBCOMMAND TARGET
-rd-tool requires at least Rundeck 2.6.0
+rd-tool requires at least Rundeck 2.6.0 and a valid token within token.yaml file
 
 Available subcommands:
 
