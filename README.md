@@ -1,6 +1,13 @@
 # rd-tool
 Rundeck tool
 
+I wrote this little tool to allow me to perform a bunch of actions I needed which are better described on the below help
+
+# Requirements
+Tested just under Ruby >= 2.0.0 
+The following non default gems should be installed
+* zip
+
 ```
 Usage: rd-tool SUBCOMMAND SUBCOMMAND TARGET
 rd-tool requires at least Rundeck 2.6.0 and a valid token within token.yaml file
@@ -23,3 +30,4 @@ Examples:
   ruby rd-tool projects pushToRepo 'git@git.foo.com:devops-rundeck/foo-repo.git'
   ruby rd-tool projects restoreFromRepo 'https://github.com/snebel29/foo-repo'
 ```
+# Many stuff could be improved I know but this is my already working MVP , don't hesitate to contact me if you have any suggestion.. but please be constructive :-)
